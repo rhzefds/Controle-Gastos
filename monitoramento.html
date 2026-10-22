@@ -9,12 +9,12 @@
         --bg: #edf4fb;
         --panel: #f8fbff;
         --panel-strong: #eaf3ff;
-        --primary: #3e78c9;
-        --primary-dark: #2f5ea8;
-        --secondary: #79d0dc;
-        --danger: #d56f7d;
-        --warning: #f0b36a;
-        --success: #36a7a0;
+        --primary: #3b6fc7;
+        --primary-dark: #214f9c;
+        --secondary: #70d5d5;
+        --danger: #d8707c;
+        --warning: #f1b56c;
+        --success: #38a9a1;
         --text: #17324a;
         --muted: #56718a;
         --border: rgba(23, 50, 74, 0.12);
@@ -23,19 +23,19 @@
       }
 
       body[data-theme="dark"] {
-        --bg: #0a1520;
+        --bg: #07151f;
         --panel: #112333;
         --panel-strong: #162d42;
-        --primary: #8ec0ff;
-        --primary-dark: #6da5ed;
-        --secondary: #70d6d1;
-        --danger: #f19aa7;
-        --warning: #f7c384;
-        --success: #7ad1c4;
+        --primary: #9fc7ff;
+        --primary-dark: #6da5ef;
+        --secondary: #75ddd7;
+        --danger: #f3a9b6;
+        --warning: #f7c98f;
+        --success: #82d8c4;
         --text: #edf5ff;
         --muted: #bfd6ee;
         --border: rgba(173, 207, 235, 0.18);
-        --soft-shadow: 0 14px 32px rgba(3, 11, 18, 0.32);
+        --soft-shadow: 0 14px 32px rgba(3, 11, 18, 0.45);
         --shadow: 0 18px 38px rgba(2, 8, 14, 0.42);
       }
 
@@ -47,14 +47,18 @@
         margin: 0;
         min-height: 100vh;
         font-family: "Times New Roman", Times, serif;
-        background: linear-gradient(180deg, #f5f9ff 0%, #eaf2fb 100%);
+        background:
+          radial-gradient(circle at top left, rgba(123, 182, 255, 0.18), transparent 30%),
+          linear-gradient(180deg, #f5f9ff 0%, #eaf2fb 100%);
         color: var(--text);
         letter-spacing: 0.01em;
         transition: background 0.25s ease, color 0.25s ease;
       }
 
       body[data-theme="dark"] {
-        background: linear-gradient(180deg, #07151f 0%, #0c1e2d 100%);
+        background:
+          radial-gradient(circle at top left, rgba(99, 161, 255, 0.18), transparent 26%),
+          linear-gradient(180deg, #07151f 0%, #0c1e2d 100%);
       }
 
       h1, h2, h3, h4, .brand-badge, .card-value, .budget-box label, .primary-btn, .secondary-btn, label, .allocation-label, .ai-badge {
@@ -175,11 +179,22 @@
       }
 
       .card {
-        background: linear-gradient(180deg, #fdfefe 0%, #edf5ff 100%);
+        background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(237,245,255,0.98) 100%);
         border: 1px solid rgba(31, 68, 101, 0.10);
-        border-radius: 16px;
+        border-radius: 20px;
         padding: 18px 20px;
         box-shadow: var(--soft-shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
       }
 
       body[data-theme="dark"] .card {
@@ -218,9 +233,9 @@
       }
 
       .panel {
-        background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(237,244,251,0.95));
+        background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(237,244,251,0.96));
         border: 1px solid rgba(31, 68, 101, 0.10);
-        border-radius: 18px;
+        border-radius: 22px;
         padding: 20px 18px 16px;
         box-shadow: var(--soft-shadow);
       }
@@ -308,15 +323,15 @@
       }
 
       .primary-btn {
-        background: linear-gradient(180deg, #7db6ef 0%, #5d9fe7 100%);
-        color: #0e2337;
+        background: linear-gradient(180deg, #8ec0ff 0%, #5e9fe8 100%);
+        color: #0d2340;
         font-weight: 800;
         padding: 16px 18px;
         border-radius: 12px;
         font-size: 1.1rem;
         line-height: 1.2;
         border: 1px solid rgba(64, 112, 162, 0.35);
-        box-shadow: 0 8px 18px rgba(62, 120, 201, 0.18);
+        box-shadow: 0 10px 18px rgba(62, 120, 201, 0.2);
       }
 
       .secondary-btn {
@@ -328,6 +343,12 @@
         font-size: 1.1rem;
         line-height: 1.2;
         box-shadow: 0 8px 18px rgba(91, 130, 181, 0.12);
+      }
+
+      .primary-btn:hover,
+      .secondary-btn:hover {
+        transform: translateY(-2px);
+        filter: saturate(1.05);
       }
 
       body[data-theme="dark"] .primary-btn {
