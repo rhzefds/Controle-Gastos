@@ -6,19 +6,35 @@
     <title>Monitor de Gastos</title>
     <style>
       :root {
-        --bg: #09111d;
-        --panel: rgba(19, 31, 48, 0.9);
-        --panel-strong: #101d2d;
-        --primary: #4ecdc4;
-        --primary-dark: #2ca79c;
-        --secondary: #7c8cff;
-        --danger: #ff6b6b;
-        --warning: #ffcd5c;
-        --success: #49d17f;
-        --text: #edf6ff;
-        --muted: #a4b6d1;
-        --border: rgba(255, 255, 255, 0.08);
-        --shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+        --bg: #ffffff;
+        --panel: rgba(255, 255, 255, 0.9);
+        --panel-strong: #f3f8ff;
+        --primary: #355d8c;
+        --primary-dark: #224d76;
+        --secondary: #7ea6d9;
+        --danger: #6f5d82;
+        --warning: #a2bddf;
+        --success: #4c7c8c;
+        --text: #152d45;
+        --muted: #4b657f;
+        --border: rgba(21, 45, 69, 0.12);
+        --shadow: 0 18px 38px rgba(21, 45, 69, 0.12);
+      }
+
+      body[data-theme="dark"] {
+        --bg: #091b2b;
+        --panel: rgba(11, 21, 31, 0.92);
+        --panel-strong: #0f2137;
+        --primary: #a4c1f2;
+        --primary-dark: #7ea4de;
+        --secondary: #5d82b9;
+        --danger: #d0b0d9;
+        --warning: #bfd7f6;
+        --success: #8ebed0;
+        --text: #edf5ff;
+        --muted: #bfd1e6;
+        --border: rgba(171, 196, 224, 0.14);
+        --shadow: 0 18px 38px rgba(2, 8, 14, 0.42);
       }
 
       * {
@@ -28,15 +44,25 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: radial-gradient(circle at top, #11203b 0%, var(--bg) 45%);
+        font-family: "Times New Roman", Times, serif;
+        background: #edf2f6;
         color: var(--text);
+        letter-spacing: 0.01em;
+        transition: background 0.25s ease, color 0.25s ease;
+      }
+
+      body[data-theme="dark"] {
+        background: linear-gradient(180deg, var(--bg) 0%, #0d1c2d 100%);
+      }
+
+      h1, h2, h3, h4, .brand-badge, .card-value, .budget-box label, .primary-btn, .secondary-btn, label, .allocation-label, .ai-badge {
+        font-family: "Times New Roman", Times, serif;
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1180px;
         margin: 0 auto;
-        padding: 32px 20px 60px;
+        padding: 26px 22px 56px;
       }
 
       .header {
@@ -44,8 +70,8 @@
         justify-content: space-between;
         align-items: center;
         gap: 16px;
-        margin-bottom: 24px;
         flex-wrap: wrap;
+        margin-bottom: 18px;
       }
 
       .brand {
@@ -73,13 +99,32 @@
       }
 
       .budget-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--border);
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(26, 44, 60, 0.18);
+        border-radius: 14px;
         padding: 12px 16px;
         display: flex;
         align-items: center;
         gap: 10px;
+        flex: 0 0 auto;
+      }
+
+      .theme-toggle {
+        border: 1px solid rgba(26, 44, 60, 0.18);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.82rem;
+        min-width: 118px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-1px);
+        border-color: rgba(97, 125, 140, 0.35);
       }
 
       .budget-box label {
@@ -89,7 +134,7 @@
 
       .budget-box input {
         background: transparent;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(26, 44, 60, 0.12);
         border-radius: 10px;
         color: var(--text);
         padding: 8px 10px;
@@ -102,21 +147,27 @@
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      .header-controls .theme-toggle,
+      .header-controls .secondary-btn {
+        min-height: 44px;
       }
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
         gap: 18px;
-        margin-bottom: 24px;
+        margin-bottom: 28px;
       }
 
       .card {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 18px;
+        background: #f3f5f7;
+        border: 1px solid rgba(26, 44, 60, 0.08);
+        border-radius: 16px;
         padding: 18px 20px;
-        box-shadow: var(--shadow);
+        box-shadow: none;
       }
 
       .card-label {
@@ -145,22 +196,26 @@
 
       .main-grid {
         display: grid;
-        grid-template-columns: 420px 1fr;
-        gap: 24px;
+        grid-template-columns: 1fr;
+        gap: 22px;
       }
 
       .panel {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: var(--shadow);
+        background: #f4f6f8;
+        border: 1px solid rgba(26, 44, 60, 0.08);
+        border-radius: 18px;
+        padding: 20px 18px 16px;
+        box-shadow: none;
       }
 
       .panel h2,
       .panel h3 {
         margin-top: 0;
         margin-bottom: 18px;
+        font-size: clamp(2rem, 2vw, 2.4rem);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        color: #1a2b38;
       }
 
       form {
@@ -180,8 +235,9 @@
       }
 
       label {
-        color: var(--muted);
-        font-size: 0.82rem;
+        color: rgba(15, 27, 38, 0.82);
+        font-size: 0.85rem;
+        font-weight: 700;
       }
 
       input,
@@ -193,15 +249,16 @@
       input,
       select {
         width: 100%;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid var(--border);
-        border-radius: 12px;
+        background: #f8f9fb;
+        border: 1px solid rgba(146, 162, 176, 0.5);
+        border-radius: 10px;
         padding: 12px 14px;
-        color: var(--text);
+        color: #1e2f3d;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
       }
 
       input::placeholder {
-        color: #7f93b3;
+        color: #7d8fa3;
       }
 
       button {
@@ -217,17 +274,24 @@
       }
 
       .primary-btn {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: #04131c;
-        font-weight: 700;
-        padding: 12px 16px;
+        background: linear-gradient(180deg, #9bbde9 0%, #8eb5e5 100%);
+        color: #0a1d2f;
+        font-weight: 800;
+        padding: 16px 18px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        line-height: 1.2;
+        border: 1px solid rgba(124, 150, 183, 0.45);
       }
 
       .secondary-btn {
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
-        border: 1px solid var(--border);
-        padding: 12px 16px;
+        background: linear-gradient(180deg, #aecae9 0%, #9abbe0 100%);
+        color: #0b1d2d;
+        border: 1px solid rgba(124, 150, 183, 0.45);
+        font-weight: 800;
+        padding: 16px 18px;
+        font-size: 1.1rem;
+        line-height: 1.2;
       }
 
       .transaction-list {
@@ -392,6 +456,43 @@
         flex: 1;
       }
 
+      .ai-output {
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: rgba(78, 205, 196, 0.06);
+        padding: 18px 18px 12px;
+        color: var(--text);
+      }
+
+      .ai-badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(124, 140, 255, 0.15);
+        border: 1px solid rgba(124, 140, 255, 0.35);
+        color: var(--primary);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .ai-output p {
+        margin: 10px 0 0;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .ai-output strong {
+        color: var(--text);
+      }
+
+      .ai-settings {
+        display: none;
+      }
+
       @media (max-width: 920px) {
         .grid {
           grid-template-columns: repeat(2, minmax(180px, 1fr));
@@ -433,6 +534,9 @@
         </div>
 
         <div class="header-controls">
+          <button type="button" class="theme-toggle" id="theme-toggle">Tema escuro</button>
+          <a href="index.html" class="secondary-btn" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none; padding:12px 16px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--text);">Voltar ao dashboard</a>
+
           <div class="budget-box">
             <label for="income-input">Renda mensal</label>
             <input id="income-input" type="number" min="0" step="0.01" value="0" />
@@ -537,6 +641,16 @@
       </section>
 
       <section class="panel" style="margin-top: 24px;">
+        <h3>Assistente financeiro gratuito</h3>
+
+        <button id="ai-analyze" class="primary-btn" type="button">Gerar análise gratuita</button>
+        <div id="ai-output" class="ai-output" aria-live="polite">
+          <span class="ai-badge">IA</span>
+          <p>Analise os seus dados para identificar padrões, riscos e oportunidades de ajuste sem custo.</p>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top: 24px;">
         <h3>Divisão sugerida de gastos</h3>
         <div id="allocation-guide" class="allocation-table"></div>
       </section>
@@ -551,6 +665,7 @@
       const STORAGE_KEY = 'monitor-gastos-v1';
       const BUDGET_KEY = 'monitor-gastos-budget';
       const INCOME_KEY = 'monitor-gastos-income';
+      const THEME_KEY = 'monitor-gastos-theme';
 
       const defaultTransactions = [
         { id: crypto.randomUUID(), type: 'income', description: 'Salário', category: 'Salário', value: 4500, date: '2026-10-01' },
@@ -811,6 +926,71 @@
           .join('');
       }
 
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function buildLocalAiSummary() {
+        const { income, expense, balance, expenseRatio } = getTotals();
+        const referenceIncome = monthlyIncome > 0 ? monthlyIncome : income;
+        const totalExpense = expense;
+        const remaining = budget - expense;
+        const categories = Object.entries(
+          transactions
+            .filter((item) => item.type === 'expense')
+            .reduce((acc, item) => {
+              acc[item.category] = (acc[item.category] || 0) + Number(item.value);
+              return acc;
+            }, {})
+        ).sort((a, b) => b[1] - a[1]);
+
+        const categoryLeader = categories.length ? categories[0] : ['Sem categoria', 0];
+        const categoryName = categoryLeader[0];
+        const categoryValue = Number(categoryLeader[1] || 0);
+
+        const safeThreshold = referenceIncome > 0 ? referenceIncome * 0.7 : budget;
+        let insight = 'Sua estrutura está equilibrada e o foco deve ser manter consistência.';
+        let action = 'Continue acompanhando os maiores gastos para evitar pequenas despesas recorrentes.';
+
+        if (expenseRatio > 70) {
+          insight = `A sua taxa de gasto está em ${expenseRatio.toFixed(0)}% da renda, acima do nível considerado confortável.`;
+          action = `A recomendação é reduzir gastos de ${categoryName} e manter o total mensal abaixo de ${formatCurrency(safeThreshold)}.`;
+        } else if (balance >= 0) {
+          insight = 'Você está com espaço saudável na sua rotina financeira e ainda pode priorizar investimentos.';
+          action = 'A melhor estratégia agora é guardar uma parte do saldo em reserva e investir outra parte em objetivos de longo prazo.';
+        } else {
+          insight = 'O momento pede atenção, porque o saldo líquido está negativo.';
+          action = 'Revise os gastos fixos e variáveis, principalmente os itens de luxo e consumo recorrente.';
+        }
+
+        return `
+          <span class="ai-badge">IA</span>
+          <p><strong>Resumo:</strong> ${insight}</p>
+          <p><strong>Maior impacto:</strong> ${categoryName} representa ${formatCurrency(categoryValue)} dos seus gastos atuais.</p>
+          <p><strong>Saída de caixa:</strong> você gastou ${formatCurrency(totalExpense)} e ainda restam ${formatCurrency(remaining)} para sua meta mensal.</p>
+          <p><strong>Ação recomendada:</strong> ${action}</p>
+        `;
+      }
+
+      function generateAiAnalysis() {
+        const aiOutput = document.getElementById('ai-output');
+        aiOutput.innerHTML = buildLocalAiSummary();
+      }
+
+      function applyTheme(theme) {
+        const resolvedTheme = theme === 'dark' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', resolvedTheme);
+        const button = document.getElementById('theme-toggle');
+        if (button) {
+          button.textContent = resolvedTheme === 'dark' ? 'Tema claro' : 'Tema escuro';
+        }
+      }
+
       function render() {
         renderOverview();
         renderTransactions();
@@ -870,6 +1050,16 @@
         render();
       });
 
+      document.getElementById('ai-analyze').addEventListener('click', generateAiAnalysis);
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const currentTheme = document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+      });
+
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      applyTheme(savedTheme);
       render();
     </script>
   </body>

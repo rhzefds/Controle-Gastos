@@ -11,19 +11,40 @@
     </script>
     <style>
       :root {
-        --bg: #07131f;
-        --bg-strong: #0d1d2d;
-        --panel: rgba(15, 27, 42, 0.9);
-        --panel-soft: rgba(18, 34, 52, 0.7);
-        --primary: #4ecdc4;
-        --secondary: #7c8cff;
-        --accent: #ffcd5c;
-        --danger: #ff6b6b;
-        --success: #49d17f;
-        --text: #edf7ff;
-        --muted: #9bb5d2;
-        --border: rgba(255,255,255,0.09);
-        --shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+        --bg: #ffffff;
+        --bg-strong: #ffffff;
+        --panel: rgba(255, 255, 255, 0.9);
+        --panel-soft: rgba(240, 246, 255, 0.95);
+        --primary: #355d8c;
+        --secondary: #7ea6d9;
+        --accent: #dfeaf9;
+        --danger: #6f5d82;
+        --success: #4c7c8c;
+        --text: #152d45;
+        --muted: #4b657f;
+        --border: rgba(21, 45, 69, 0.12);
+        --shadow: 0 18px 40px rgba(21, 45, 69, 0.12);
+      }
+
+      body[data-theme="dark"] {
+        --text: #f3f8ff;
+        --muted: #dfeaf8;
+      }
+
+      body[data-theme="dark"] {
+        --bg: #091b2b;
+        --bg-strong: #0e2337;
+        --panel: rgba(11, 21, 31, 0.92);
+        --panel-soft: rgba(15, 28, 40, 0.92);
+        --primary: #a4c1f2;
+        --secondary: #5d82b9;
+        --accent: #dfeaf9;
+        --danger: #d0b0d9;
+        --success: #8ebed0;
+        --text: #edf5ff;
+        --muted: #bfd1e6;
+        --border: rgba(171, 196, 224, 0.14);
+        --shadow: 0 18px 38px rgba(2, 8, 14, 0.42);
       }
 
       * { box-sizing: border-box; }
@@ -31,15 +52,44 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: radial-gradient(circle at top, #13263d 0%, var(--bg) 42%);
+        font-family: "Times New Roman", Times, serif;
+        background: linear-gradient(180deg, #ffffff 0%, #edf7ff 100%);
         color: var(--text);
+        letter-spacing: 0.01em;
+        transition: background 0.25s ease, color 0.25s ease;
+      }
+
+      body[data-theme="dark"] {
+        background: linear-gradient(180deg, var(--bg) 0%, #0d1c2d 100%);
+      }
+
+      h1, h2, h3, h4, .brand-mark, .card-value, .status-pill, .primary-btn, .secondary-btn, .field-group label, .panel h3, .rule-percent, .brand h1 {
+        font-family: "Times New Roman", Times, serif;
       }
 
       .app-shell {
-        max-width: 1400px;
+        max-width: 1480px;
         margin: 0 auto;
         padding: 28px 18px 56px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 18px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .main-panel {
+        display: grid;
+        gap: 20px;
       }
 
       .topbar {
@@ -80,6 +130,22 @@
         padding: 10px 14px;
         color: var(--muted);
         font-size: 0.8rem;
+      }
+
+      .theme-toggle {
+        border: 1px solid var(--border);
+        background: var(--panel);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-1px);
+        border-color: rgba(97, 125, 140, 0.35);
       }
 
       .summary-grid {
@@ -176,6 +242,77 @@
         margin-top: 16px;
       }
 
+      .form-card {
+        background: linear-gradient(180deg, rgba(91, 109, 122, 0.98) 0%, rgba(70, 87, 101, 0.98) 100%);
+        border: 1px solid rgba(196, 217, 238, 0.2);
+        border-radius: 18px;
+        padding: 18px 16px;
+        box-shadow: var(--shadow);
+      }
+
+      .form-card h3 {
+        margin: 0 0 14px;
+        font-size: 1rem;
+        color: #f5fbff;
+      }
+
+      .field-group {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .field-group label {
+        color: #f1f8ff;
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .field-group input,
+      .field-group select,
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid rgba(201, 221, 242, 0.3);
+        background: rgba(247, 251, 255, 0.09);
+        color: #f5fbff;
+        padding: 10px 12px;
+        font: inherit;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, #9cbfe5 0%, #6d9ad2 100%);
+        color: #0a1d2f;
+        border: none;
+        font-weight: 800;
+      }
+
+      .secondary-btn {
+        background: linear-gradient(135deg, rgba(155, 182, 222, 0.95) 0%, rgba(109, 147, 196, 0.95) 100%);
+        color: #0b1d2d;
+        font-weight: 800;
+      }
+
+      .primary-btn:hover,
+      .secondary-btn:hover {
+        transform: translateY(-1px);
+      }
+
       .rule-row {
         display: grid;
         grid-template-columns: 1.6fr 0.7fr 1.6fr;
@@ -206,6 +343,14 @@
       }
 
       @media (max-width: 1000px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+        }
+
         .summary-grid {
           grid-template-columns: repeat(2, minmax(180px, 1fr));
         }
@@ -217,6 +362,10 @@
 
       @media (max-width: 560px) {
         .summary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .field-row {
           grid-template-columns: 1fr;
         }
 
@@ -234,65 +383,100 @@
           <h1>Dashboard Financeiro</h1>
         </div>
 
-        <div class="status-pill" id="storage-status">Dados armazenados no navegador</div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button type="button" class="theme-toggle" id="theme-toggle">Tema escuro</button>
+          <div class="status-pill" id="storage-status">Dados armazenados no navegador</div>
+        </div>
       </header>
 
-      <section class="summary-grid">
-        <article class="card">
-          <span class="card-label">Receitas</span>
-          <div id="income-total" class="card-value positive">R$ 0,00</div>
-          <div class="card-foot">Total recebido</div>
-        </article>
+      <div class="layout">
+        <aside class="sidebar">
+          <section class="form-card">
+            <h3>Navegação</h3>
+            <div class="field-group">
+              <label style="margin-bottom: 6px; display: block;">Tela de cadastro</label>
+              <a href="monitoramento.html" class="primary-btn" style="display:inline-block; text-align:center; text-decoration:none;">Abrir monitoramento</a>
+            </div>
+          </section>
 
-        <article class="card">
-          <span class="card-label">Despesas</span>
-          <div id="expense-total" class="card-value negative">R$ 0,00</div>
-          <div class="card-foot">Total gasto</div>
-        </article>
+          <section class="form-card">
+            <h3>Configuração do mês</h3>
+            <form id="settings-form">
+              <div class="field-group">
+                <label for="monthly-income">Renda mensal</label>
+                <input id="monthly-income" type="number" step="0.01" min="0" placeholder="4200" />
+              </div>
 
-        <article class="card">
-          <span class="card-label">Saldo</span>
-          <div id="balance-total" class="card-value blue">R$ 0,00</div>
-          <div class="card-foot">Restante no mês</div>
-        </article>
+              <div class="field-group">
+                <label for="monthly-budget">Meta mensal</label>
+                <input id="monthly-budget" type="number" step="0.01" min="0" placeholder="2600" />
+              </div>
 
-        <article class="card">
-          <span class="card-label">Meta restante</span>
-          <div id="budget-remaining" class="card-value warning">R$ 0,00</div>
-          <div id="budget-meta" class="card-foot">Comparado à sua meta</div>
-        </article>
-      </section>
+              <button class="secondary-btn" type="submit">Salvar</button>
+            </form>
+          </section>
+        </aside>
 
-      <section class="chart-grid">
-        <div class="panel">
-          <h3>Gastos por categoria</h3>
-          <div class="chart-wrap"><canvas id="categoryChart"></canvas></div>
-        </div>
+        <main class="main-panel">
+          <section class="summary-grid">
+            <article class="card">
+              <span class="card-label">Receitas</span>
+              <div id="income-total" class="card-value positive">R$ 0,00</div>
+              <div class="card-foot">Total recebido</div>
+            </article>
 
-        <div class="panel">
-          <h3>Evolução do mês</h3>
-          <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-        </div>
-      </section>
+            <article class="card">
+              <span class="card-label">Despesas</span>
+              <div id="expense-total" class="card-value negative">R$ 0,00</div>
+              <div class="card-foot">Total gasto</div>
+            </article>
 
-      <section class="chart-grid">
-        <div class="panel">
-          <h3>Divisão ideal de gastos</h3>
-          <div class="rules-box" id="rules-box"></div>
-          <div class="meta-note">Regra base: 50/30/20 da renda mensal.</div>
-        </div>
+            <article class="card">
+              <span class="card-label">Saldo</span>
+              <div id="balance-total" class="card-value blue">R$ 0,00</div>
+              <div class="card-foot">Restante no mês</div>
+            </article>
 
-        <div class="panel">
-          <h3>Resumo inteligente</h3>
-          <div class="insights" id="insights-box"></div>
-        </div>
-      </section>
+            <article class="card">
+              <span class="card-label">Meta restante</span>
+              <div id="budget-remaining" class="card-value warning">R$ 0,00</div>
+              <div id="budget-meta" class="card-foot">Comparado à sua meta</div>
+            </article>
+          </section>
+
+          <section class="chart-grid">
+            <div class="panel">
+              <h3>Gastos por categoria</h3>
+              <div class="chart-wrap"><canvas id="categoryChart"></canvas></div>
+            </div>
+
+            <div class="panel">
+              <h3>Evolução do mês</h3>
+              <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+            </div>
+          </section>
+
+          <section class="chart-grid">
+            <div class="panel">
+              <h3>Divisão ideal de gastos</h3>
+              <div class="rules-box" id="rules-box"></div>
+              <div class="meta-note">Regra base: 50/30/20 da renda mensal.</div>
+            </div>
+
+            <div class="panel">
+              <h3>Resumo inteligente</h3>
+              <div class="insights" id="insights-box"></div>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
 
     <script>
       const STORAGE_KEY = 'monitor-gastos-v1';
       const BUDGET_KEY = 'monitor-gastos-budget';
       const INCOME_KEY = 'monitor-gastos-income';
+      const THEME_KEY = 'monitor-gastos-theme';
 
       const defaultTransactions = [
         { id: crypto.randomUUID(), type: 'income', description: 'Salário', category: 'Salário', value: 4200, date: '2026-10-01' },
@@ -539,12 +723,49 @@
         });
       }
 
+      function applyTheme(theme) {
+        const resolvedTheme = theme === 'dark' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', resolvedTheme);
+        const button = document.getElementById('theme-toggle');
+        if (button) {
+          button.textContent = resolvedTheme === 'dark' ? 'Tema claro' : 'Tema escuro';
+        }
+      }
+
+      function populateSettings() {
+        const incomeInput = document.getElementById('monthly-income');
+        const budgetInput = document.getElementById('monthly-budget');
+
+        if (incomeInput) incomeInput.value = monthlyIncome || '';
+        if (budgetInput) budgetInput.value = budget || '';
+      }
+
+      function handleSettingsSubmit(event) {
+        event.preventDefault();
+
+        const incomeValue = Number(document.getElementById('monthly-income').value || 0);
+        const budgetValue = Number(document.getElementById('monthly-budget').value || 0);
+
+        if (incomeValue > 0) {
+          monthlyIncome = incomeValue;
+          localStorage.setItem(INCOME_KEY, String(monthlyIncome));
+        }
+
+        if (budgetValue > 0) {
+          budget = budgetValue;
+          localStorage.setItem(BUDGET_KEY, String(budget));
+        }
+
+        renderDashboard();
+      }
+
       async function initializeData() {
         transactions = await loadTransactions();
         const storageStatus = document.getElementById('storage-status');
         if (storageStatus) {
           storageStatus.textContent = supabaseClient ? 'Dados sincronizados com Supabase' : 'Dados armazenados no navegador';
         }
+        populateSettings();
         renderDashboard();
       }
 
@@ -555,6 +776,16 @@
         renderCharts();
       }
 
+      document.getElementById('settings-form').addEventListener('submit', handleSettingsSubmit);
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const currentTheme = document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+      });
+
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      applyTheme(savedTheme);
       initializeData();
     </script>
   </body>
