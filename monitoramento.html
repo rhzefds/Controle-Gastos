@@ -1,0 +1,876 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitor de Gastos</title>
+    <style>
+      :root {
+        --bg: #09111d;
+        --panel: rgba(19, 31, 48, 0.9);
+        --panel-strong: #101d2d;
+        --primary: #4ecdc4;
+        --primary-dark: #2ca79c;
+        --secondary: #7c8cff;
+        --danger: #ff6b6b;
+        --warning: #ffcd5c;
+        --success: #49d17f;
+        --text: #edf6ff;
+        --muted: #a4b6d1;
+        --border: rgba(255, 255, 255, 0.08);
+        --shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top, #11203b 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 20px 60px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-badge {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: #04131c;
+        font-size: 1.4rem;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 2vw, 2.5rem);
+      }
+
+      .budget-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .budget-box label {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .budget-box input {
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        padding: 8px 10px;
+        width: 140px;
+        font-size: 1rem;
+      }
+
+      .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(200px, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .card-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .card-value {
+        font-size: clamp(1.4rem, 2vw, 2.1rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+      }
+
+      .card-meta {
+        margin-top: 6px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .income { color: var(--success); }
+      .expense { color: var(--danger); }
+      .balance { color: var(--primary); }
+      .budget { color: var(--warning); }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 24px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .panel h2,
+      .panel h3 {
+        margin-top: 0;
+        margin-bottom: 18px;
+      }
+
+      form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field-row {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      input,
+      select,
+      button {
+        font: inherit;
+      }
+
+      input,
+      select {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: var(--text);
+      }
+
+      input::placeholder {
+        color: #7f93b3;
+      }
+
+      button {
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        opacity: 0.96;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: #04131c;
+        font-weight: 700;
+        padding: 12px 16px;
+      }
+
+      .secondary-btn {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 12px 16px;
+      }
+
+      .transaction-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+        max-height: 420px;
+        overflow: auto;
+      }
+
+      .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 12px 14px;
+      }
+
+      .transaction-main {
+        display: grid;
+        gap: 5px;
+      }
+
+      .transaction-main strong {
+        font-size: 1rem;
+      }
+
+      .transaction-meta {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .transaction-value {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .transaction-value.income {
+        color: var(--success);
+      }
+
+      .transaction-value.expense {
+        color: var(--danger);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: 0.73rem;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+      }
+
+      .empty-state {
+        padding: 16px;
+        border: 1px dashed var(--border);
+        border-radius: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .insights {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .insight-box {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 14px 16px;
+      }
+
+      .insight-box strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .category-box {
+        display: grid;
+        gap: 10px;
+      }
+
+      .category-item {
+        display: grid;
+        gap: 6px;
+      }
+
+      .category-line {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .allocation-table {
+        display: grid;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .allocation-row {
+        display: grid;
+        grid-template-columns: 1.4fr 0.5fr 2.2fr;
+        gap: 18px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .allocation-row:last-child {
+        border-bottom: none;
+      }
+
+      .allocation-label {
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .allocation-percent {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .allocation-examples {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .bar {
+        width: 100%;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .actions button {
+        flex: 1;
+      }
+
+      @media (max-width: 920px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(180px, 1fr));
+        }
+
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .allocation-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+
+      @media (max-width: 580px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+
+        .header {
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="brand">
+          <div class="brand-badge">R$</div>
+          <h1>Monitor de Gastos</h1>
+        </div>
+
+        <div class="header-controls">
+          <div class="budget-box">
+            <label for="income-input">Renda mensal</label>
+            <input id="income-input" type="number" min="0" step="0.01" value="0" />
+          </div>
+
+          <div class="budget-box">
+            <label for="budget-input">Meta mensal</label>
+            <input id="budget-input" type="number" min="0" step="0.01" value="5000" />
+          </div>
+        </div>
+      </header>
+
+      <section class="grid" aria-label="Resumo financeiro">
+        <article class="card">
+          <span class="card-label">Receitas</span>
+          <div id="income-total" class="card-value income">R$ 0,00</div>
+          <div class="card-meta">Total recebido</div>
+        </article>
+
+        <article class="card">
+          <span class="card-label">Despesas</span>
+          <div id="expense-total" class="card-value expense">R$ 0,00</div>
+          <div class="card-meta">Total gasto</div>
+        </article>
+
+        <article class="card">
+          <span class="card-label">Saldo</span>
+          <div id="balance-total" class="card-value balance">R$ 0,00</div>
+          <div class="card-meta">Restante no mês</div>
+        </article>
+
+        <article class="card">
+          <span class="card-label">Meta restante</span>
+          <div id="budget-remaining" class="card-value budget">R$ 0,00</div>
+          <div id="budget-meta" class="card-meta">Comparado à sua meta</div>
+        </article>
+      </section>
+
+      <main class="main-grid">
+        <section class="panel">
+          <h2>Adicionar movimentação</h2>
+
+          <form id="transaction-form">
+            <div class="field">
+              <label for="type">Tipo</label>
+              <select id="type" name="type">
+                <option value="expense">Despesa</option>
+                <option value="income">Receita</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="description">Descrição</label>
+              <input id="description" name="description" type="text" placeholder="Ex.: Supermercado" required />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="category">Categoria</label>
+                <select id="category" name="category">
+                  <option value="Moradia">Moradia</option>
+                  <option value="Alimentação">Alimentação</option>
+                  <option value="Transporte">Transporte</option>
+                  <option value="Saúde">Saúde</option>
+                  <option value="Lazer">Lazer</option>
+                  <option value="Educação">Educação</option>
+                  <option value="Contas">Contas</option>
+                  <option value="Investimentos">Investimentos</option>
+                  <option value="Salário">Salário</option>
+                  <option value="Outros">Outros</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="value">Valor</label>
+                <input id="value" name="value" type="number" min="0.01" step="0.01" placeholder="0,00" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="date">Data</label>
+              <input id="date" name="date" type="date" required />
+            </div>
+
+            <button class="primary-btn" type="submit">Adicionar</button>
+          </form>
+
+          <div class="actions">
+            <button id="clear-data" class="secondary-btn" type="button">Resetar dados</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Movimentações recentes</h2>
+          <ul id="transaction-list" class="transaction-list" aria-live="polite"></ul>
+        </section>
+      </main>
+
+      <section class="panel" style="margin-top: 24px;">
+        <h3>Resumo por categoria</h3>
+        <div id="category-summary" class="category-box"></div>
+      </section>
+
+      <section class="panel" style="margin-top: 24px;">
+        <h3>Divisão sugerida de gastos</h3>
+        <div id="allocation-guide" class="allocation-table"></div>
+      </section>
+
+      <section class="panel" style="margin-top: 24px;">
+        <h3>Orientações inteligentes</h3>
+        <div id="tips" class="insights"></div>
+      </section>
+    </div>
+
+    <script>
+      const STORAGE_KEY = 'monitor-gastos-v1';
+      const BUDGET_KEY = 'monitor-gastos-budget';
+      const INCOME_KEY = 'monitor-gastos-income';
+
+      const defaultTransactions = [
+        { id: crypto.randomUUID(), type: 'income', description: 'Salário', category: 'Salário', value: 4500, date: '2026-10-01' },
+        { id: crypto.randomUUID(), type: 'expense', description: 'Aluguel', category: 'Moradia', value: 1700, date: '2026-10-03' },
+        { id: crypto.randomUUID(), type: 'expense', description: 'Mercado', category: 'Alimentação', value: 520, date: '2026-10-05' },
+        { id: crypto.randomUUID(), type: 'expense', description: 'Combustível', category: 'Transporte', value: 280, date: '2026-10-07' },
+        { id: crypto.randomUUID(), type: 'expense', description: 'Streaming', category: 'Lazer', value: 79, date: '2026-10-10' }
+      ];
+
+      let transactions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultTransactions;
+      let budget = Number(localStorage.getItem(BUDGET_KEY)) || 5000;
+      let monthlyIncome = Number(localStorage.getItem(INCOME_KEY)) || 0;
+
+      const incomeTotalEl = document.getElementById('income-total');
+      const expenseTotalEl = document.getElementById('expense-total');
+      const balanceTotalEl = document.getElementById('balance-total');
+      const budgetRemainingEl = document.getElementById('budget-remaining');
+      const transactionListEl = document.getElementById('transaction-list');
+      const categorySummaryEl = document.getElementById('category-summary');
+      const tipsEl = document.getElementById('tips');
+      const budgetMetaEl = document.getElementById('budget-meta');
+      const budgetInput = document.getElementById('budget-input');
+      const incomeInput = document.getElementById('income-input');
+      const form = document.getElementById('transaction-form');
+      const dateInput = document.getElementById('date');
+      const clearButton = document.getElementById('clear-data');
+
+      budgetInput.value = budget;
+      incomeInput.value = monthlyIncome;
+      dateInput.valueAsDate = new Date();
+
+      function formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(value || 0);
+      }
+
+      function saveTransactions() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+      }
+
+      function saveBudget() {
+        localStorage.setItem(BUDGET_KEY, String(budget));
+      }
+
+      function saveIncome() {
+        localStorage.setItem(INCOME_KEY, String(monthlyIncome));
+      }
+
+      function getRecommendedSpend() {
+        if (!monthlyIncome || monthlyIncome <= 0) {
+          return 0;
+        }
+
+        return monthlyIncome * 0.7;
+      }
+
+      function getTotals() {
+        const income = transactions
+          .filter((item) => item.type === 'income')
+          .reduce((sum, item) => sum + Number(item.value), 0);
+
+        const expense = transactions
+          .filter((item) => item.type === 'expense')
+          .reduce((sum, item) => sum + Number(item.value), 0);
+
+        const balance = income - expense;
+        const expenseRatio = income > 0 ? (expense / income) * 100 : 0;
+
+        return { income, expense, balance, expenseRatio };
+      }
+
+      function renderOverview() {
+        const { income, expense, balance, expenseRatio } = getTotals();
+        const referenceIncome = monthlyIncome > 0 ? monthlyIncome : income;
+        const recommendedSpend = getRecommendedSpend();
+        const remaining = budget - expense;
+
+        incomeTotalEl.textContent = formatCurrency(income);
+        expenseTotalEl.textContent = formatCurrency(expense);
+        balanceTotalEl.textContent = formatCurrency(balance);
+
+        budgetRemainingEl.textContent = formatCurrency(remaining);
+        budgetRemainingEl.style.color = remaining >= 0 ? '#ffcd5c' : '#ff6b6b';
+
+        const metaWarning = expense > budget ? 'Acima da meta' : 'Dentro da meta';
+        if (referenceIncome > 0) {
+          budgetMetaEl.textContent = `${metaWarning} · ${expenseRatio.toFixed(0)}% da renda · ideal até ${formatCurrency(recommendedSpend)}`;
+        } else {
+          budgetMetaEl.textContent = `${metaWarning} · ${expenseRatio.toFixed(0)}% da renda`;
+        }
+      }
+
+      function renderTransactions() {
+        if (!transactions.length) {
+          transactionListEl.innerHTML = '<li class="empty-state">Nenhuma movimentação cadastrada ainda.</li>';
+          return;
+        }
+
+        const ordered = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        transactionListEl.innerHTML = ordered
+          .map((item) => {
+            const sign = item.type === 'income' ? '+' : '-';
+            const valueClass = item.type === 'income' ? 'income' : 'expense';
+
+            return `
+              <li class="transaction-item">
+                <div class="transaction-main">
+                  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <strong>${item.description}</strong>
+                    <span class="badge">${item.category}</span>
+                  </div>
+                  <span class="transaction-meta">${new Date(item.date + 'T00:00:00').toLocaleDateString('pt-BR')} · ${item.type === 'income' ? 'Receita' : 'Despesa'}</span>
+                </div>
+                <div class="transaction-value ${valueClass}">${sign}${formatCurrency(item.value)}</div>
+              </li>
+            `;
+          })
+          .join('');
+      }
+
+      function renderCategorySummary() {
+        const expenses = transactions.filter((item) => item.type === 'expense');
+        if (!expenses.length) {
+          categorySummaryEl.innerHTML = '<div class="empty-state">Ainda não há despesas para mostrar.</div>';
+          return;
+        }
+
+        const totals = expenses.reduce((acc, item) => {
+          acc[item.category] = (acc[item.category] || 0) + Number(item.value);
+          return acc;
+        }, {});
+
+        const totalExpense = Object.values(totals).reduce((sum, value) => sum + value, 0);
+
+        const items = Object.entries(totals)
+          .sort((a, b) => b[1] - a[1])
+          .map(([category, value]) => ({
+            category,
+            value,
+            percentage: totalExpense ? (value / totalExpense) * 100 : 0
+          }));
+
+        categorySummaryEl.innerHTML = items
+          .map(
+            (item) => `
+              <div class="category-item">
+                <div class="category-line">
+                  <span>${item.category}</span>
+                  <strong>${formatCurrency(item.value)}</strong>
+                </div>
+                <div class="bar">
+                  <div class="bar-fill" style="width:${Math.min(item.percentage, 100)}%"></div>
+                </div>
+                <div class="category-line">
+                  <span>${item.percentage.toFixed(0)}% do total</span>
+                </div>
+              </div>
+            `
+          )
+          .join('');
+      }
+
+      function renderAllocationGuide() {
+        const base = monthlyIncome > 0 ? monthlyIncome : budget;
+        const rules = [
+          {
+            label: 'Necessidades Essenciais',
+            percent: 50,
+            examples: 'Aluguel/financiamento, contas de água, luz, gás, supermercado, plano de saúde, transporte e medicamentos.'
+          },
+          {
+            label: 'Estilo de Vida / Desejos',
+            percent: 30,
+            examples: 'Restaurantes, delivery, streaming (Netflix, Spotify), lazer, viagens, compras de roupas e hobbies.'
+          },
+          {
+            label: 'Objetivos e Investimentos',
+            percent: 20,
+            examples: 'Reserva de emergência, quitação de dívidas, aportes em renda fixa/ações e aposentadoria.'
+          }
+        ];
+
+        const targetIncome = Math.max(base, 0);
+
+        document.getElementById('allocation-guide').innerHTML = rules
+          .map((rule) => {
+            const amount = targetIncome * (rule.percent / 100);
+            return `
+              <div class="allocation-row">
+                <div class="allocation-label">${rule.label}</div>
+                <div class="allocation-percent">${rule.percent}%</div>
+                <div>
+                  <div class="allocation-examples">${rule.examples}</div>
+                  <div style="margin-top: 10px; color: var(--text); font-size: 0.82rem;">Valor sugerido: <strong>${formatCurrency(amount)}</strong></div>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      function renderTips() {
+        const { income, expense, balance, expenseRatio } = getTotals();
+        const budgetRemaining = budget - expense;
+        const referenceIncome = monthlyIncome > 0 ? monthlyIncome : income;
+        const recommendedSpend = getRecommendedSpend();
+
+        const tips = [];
+
+        if (referenceIncome > 0 && expenseRatio > 70) {
+          tips.push({
+            title: 'Gasto acima do ideal',
+            text: `Você está gastando ${expenseRatio.toFixed(0)}% da sua renda. O ideal seria manter o total em torno de ${formatCurrency(recommendedSpend)}.`
+          });
+        } else {
+          tips.push({
+            title: 'Saúde financeira está boa',
+            text: `Seu gasto está em ${expenseRatio.toFixed(0)}% da renda. Com uma renda mensal de ${formatCurrency(referenceIncome || 0)}, um limite saudável fica em ${formatCurrency(recommendedSpend || 0)}.`
+          });
+        }
+
+        if (balance > 0) {
+          tips.push({
+            title: 'Excedente disponível',
+            text: `Você ainda tem ${formatCurrency(balance)} sobrando. Uma boa regra é separar 20% para investimentos e 10% para reserva de emergência.`
+          });
+        } else {
+          tips.push({
+            title: 'Foco em ajuste',
+            text: 'Seu saldo está negativo. Revise gastos não essenciais e priorize a redução de despesas de luxo ou recorrentes.'
+          });
+        }
+
+        if (budgetRemaining > 0) {
+          tips.push({
+            title: 'Meta mensal ainda segura',
+            text: `Você ainda pode gastar ${formatCurrency(budgetRemaining)} antes de ultrapassar sua meta mensal. Com o valor de renda informado, a regra prática seria manter as despesas abaixo de ${formatCurrency(recommendedSpend || 0)}.`
+          });
+        } else {
+          tips.push({
+            title: 'Meta ultrapassada',
+            text: `Você já está ${formatCurrency(Math.abs(budgetRemaining))} acima da sua meta. Reavalie o orçamento para evitar gastos desnecessários.`
+          });
+        }
+
+        tipsEl.innerHTML = tips
+          .map(
+            (item) => `
+              <div class="insight-box">
+                <strong>${item.title}</strong>
+                <span>${item.text}</span>
+              </div>
+            `
+          )
+          .join('');
+      }
+
+      function render() {
+        renderOverview();
+        renderTransactions();
+        renderCategorySummary();
+        renderAllocationGuide();
+        renderTips();
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const type = document.getElementById('type').value;
+        const description = document.getElementById('description').value.trim();
+        const category = document.getElementById('category').value;
+        const value = Number(document.getElementById('value').value);
+        const date = document.getElementById('date').value;
+
+        if (!description || !date || !value || value <= 0) {
+          return;
+        }
+
+        transactions.unshift({
+          id: crypto.randomUUID(),
+          type,
+          description,
+          category,
+          value,
+          date
+        });
+
+        saveTransactions();
+        form.reset();
+        dateInput.valueAsDate = new Date();
+        render();
+      });
+
+      incomeInput.addEventListener('input', (event) => {
+        const value = Number(event.target.value);
+        monthlyIncome = Number.isFinite(value) && value >= 0 ? value : 0;
+        saveIncome();
+        render();
+      });
+
+      budgetInput.addEventListener('input', (event) => {
+        const value = Number(event.target.value);
+        budget = Number.isFinite(value) && value >= 0 ? value : 0;
+        saveBudget();
+        render();
+      });
+
+      clearButton.addEventListener('click', () => {
+        const confirmed = window.confirm('Deseja apagar todas as movimentações?');
+        if (!confirmed) return;
+
+        transactions = [];
+        saveTransactions();
+        render();
+      });
+
+      render();
+    </script>
+  </body>
+</html>
